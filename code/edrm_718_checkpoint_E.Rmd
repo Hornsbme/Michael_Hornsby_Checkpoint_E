@@ -1,0 +1,14 @@
+---
+title: "Michael Hornsby EDRM 718 Checkpoint E code"
+output: html_notebook
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(ggrepel)
+library(scales)
+library(readxl)
+library(purrr)
+```
+

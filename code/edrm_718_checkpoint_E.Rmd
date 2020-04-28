@@ -3,12 +3,156 @@ title: "Michael Hornsby EDRM 718 Checkpoint E code"
 output: html_notebook
 ---
 
-```{r}
+```{r include=FALSE}
 library(here)
 library(tidyverse)
 library(ggrepel)
 library(scales)
 library(readxl)
 library(purrr)
+library(dplyr)
+```
+
+Number 1
+
+tidyverse
+
+
+Number 2
+
+```{r}
+health <- as.tibble(read_csv(here("data", "SmallCitiesHealthData.csv")))
+health
+```
+
+
+Number 3
+
+```{r}
+health <- as.data.frame(health)
+health
+
+health <- as.tibble(health)
+health
+```
+
+
+Number 4
+
+```{r}
+ggplot(health, aes(x = hosp.beds, y = doctors)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Number of Doctors by Number of Hospital Beds",
+       x = "Number of Hospital Beds",
+       y = "Number of Doctors")
+```
+
+
+Number 5
+
+```{r}
+health %>%
+  filter(hosp.beds < 1000) %>%
+  ggplot(aes(x = hosp.beds, y = doctors)) +
+  geom_point() +
+  labs(title = "Scatter Plot for Cities with Less Than 1,000 Hospital Beds",
+       x = "Number of Hospital Beds",
+       y = "Number of Doctors")
+```
+
+
+
+Number 6
+
+```{r}
+health %>%
+  filter(hosp.beds < 1000) %>%
+  ggplot(aes(x = hosp.beds, y = doctors)) +
+  geom_point() +
+  stat_smooth(method = lm) +
+  labs(title = "Scatter Plot for Cities with Less Than 1,000 Hospital Beds",
+       x = "Number of Hospital Beds",
+       y = "Number of Doctors")
+```
+
+
+Number 7
+
+```{r}
+densities <- as.tibble(read_csv(here("data", "SmallCitiesDensities.csv")))
+densities
+```
+
+```{r}
+health <- densities %>%
+  left_join(health, by = "city.code")
+
+health
+```
+
+
+Number 8
+
+```{r}
+health <- health %>% mutate(density, catagory = cut(density,
+                                     breaks = c(-Inf, 80, 120, Inf),
+                                     labels = c("Low", "Middle", "High")))
+health
+```
+
+
+Number 9
+
+```{r}
+health %>%
+  filter(hosp.beds < 1000) %>%
+  ggplot(aes(x = hosp.beds, y = doctors, color = catagory, shape = catagory)) +
+  geom_point(aes(color = catagory)) +
+  stat_smooth(method = lm, se = FALSE) +
+  labs(title = "Scatter Plot for Cities with Less Than 1,000 Hospital Beds",
+       x = "Number of Hospital Beds",
+       y = "Number of Doctors")
+```
+
+
+Number 10
+
+```{r}
+health %>%
+  filter(hosp.beds < 1000) %>%
+  ggplot(aes(x = hosp.beds, y = doctors, color = catagory, shape = catagory)) +
+  geom_point(aes(color = catagory)) +
+  stat_smooth(method = lm, se = FALSE) +
+  labs(title = "Scatter Plot for Cities with Less Than 1,000 Hospital Beds By Density Level",
+       x = "Number of Hospital Beds",
+       y = "Number of Doctors")
+```
+
+
+Number 11
+
+```{r}
+patients <- as.tibble(read_csv(here("data", "PatientData.csv")))
+patients
+
+patients <- patients %>%
+  separate(patient, into = c("title", "patient"), sep = " ", convert = TRUE)
+
+patients <- select(patients, -c(title))
+
+patients
+```
+
+
+Number 12
+
+```{r}
+tidy_patients <- patients %>%
+  gather(`reading.1`, `reading.2`, `reading.3`,
+         key = "reading",
+         value = "score")
+
+
+tidy_patients
 ```
 
